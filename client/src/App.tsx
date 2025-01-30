@@ -1,3 +1,4 @@
+import {RegisterPage} from "@/pages/RegisterPage.tsx";
 
 
 function App() {
@@ -5,7 +6,7 @@ function App() {
 
     return (
         <>
-
+            <RegisterPage/>
         </>
     )
 }
