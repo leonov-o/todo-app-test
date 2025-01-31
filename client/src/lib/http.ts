@@ -19,11 +19,11 @@ $api.interceptors.response.use(
         if (axiosError.response?.status === 401 && originalRequest && !originalRequest._isRetry) {
             originalRequest._isRetry = true;
             try {
-                const response = await axios.get<{ access_token: string }>(
+                const response = await axios.get(
                     `${import.meta.env.VITE_SERVER_URL}/refresh`,
                     { withCredentials: true }
                 );
-                localStorage.setItem('token', response.data.access_token);
+                localStorage.setItem('token', response.data.accessToken);
                 return $api.request(originalRequest);
             } catch (e) {
                 console.error((e as Error).message);
