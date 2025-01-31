@@ -1,5 +1,6 @@
 import {ITodoList, TodoList} from "../models/TodoList";
 import {ApiError} from "../exceptions/ApiError";
+import {userService} from "./UserService";
 
 class TodoService {
 
@@ -31,12 +32,27 @@ class TodoService {
             throw ApiError.NotFound();
         }
 
-        const canEdit = target.team.find((item) => item.userId === userId && item.role === 'owner' || item.role === 'admin');
-        if (!canEdit) {
+        return TodoList.findOneAndUpdate({_id: id}, data, {new: true});
+    }
+
+    async addMember(userId: string, id: string, email: string, role: 'admin' | 'viewer') {
+        const user = await userService.getUserByEmail(email);
+        if(!user) {
+            throw ApiError.NotFound();
+        }
+
+        const target = await this.getById(id);
+        if (!target) {
+            throw ApiError.NotFound();
+        }
+
+        const isOwner = target.team.find((item) => item.userId === userId && item.role === 'owner');
+        if (!isOwner) {
             throw ApiError.ForbiddenError();
         }
 
-        return TodoList.findOneAndUpdate({_id: id}, data, {new: true});
+        target.team.push({userId: user._id, role});
+        await target.save();
     }
 
     async delete(userId: string, id: string) {

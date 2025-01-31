@@ -20,7 +20,7 @@ class TodoController {
     async getByUserId(req: CustomRequest, res: Response, next: NextFunction) {
         try {
             if(!req.user) return;
-            const data = await todoService.getById(req.user?._id);
+            const data = await todoService.getByUserId(req.user?._id);
             res.status(200).json({
                 success: true,
                 data
@@ -65,6 +65,19 @@ class TodoController {
             res.status(200).json({
                 success: true,
                 data
+            });
+
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async addMember(req: CustomRequest, res: Response, next: NextFunction) {
+        try {
+            if(!req.user) return;
+             await todoService.addMember(req.user?._id, req.params.id, req.body.email, req.body.role);
+            res.status(200).json({
+                success: true
             });
 
         } catch (e) {

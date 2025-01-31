@@ -18,6 +18,7 @@ router.get("/todo-lists/:id", todoController.getById);
 router.get("/my-todo-lists", authMiddleware, todoController.getByUserId);
 router.post("/todo-lists", authMiddleware,todoController.create);
 router.put("/todo-lists/:id", authMiddleware, todoController.update);
+router.post("/add-member/:id", authMiddleware, todoController.addMember);
 router.delete("/todo-lists/:id", authMiddleware, todoController.delete);
 
 export default router;
